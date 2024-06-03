@@ -2,6 +2,7 @@ using InfoTrack.ProjectWaterloo.Scraping.Interfaces;
 
 namespace InfoTrack.ProjectWaterloo.Scraping.Strategies;
 
+// DI will resolve all instances of the ISearchEngineScraperFactory that have been registered
 public class SearchEngineScraperStrategy(IEnumerable<ISearchEngineScraperFactory> searchEngineScraperFactories)
     : ISearchEngineScraperStrategy
 {
