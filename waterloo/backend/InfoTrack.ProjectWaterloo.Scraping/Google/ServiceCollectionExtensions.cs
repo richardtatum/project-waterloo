@@ -13,25 +13,22 @@ public static class ServiceCollectionExtensions
         // This may already be registered if there are multiple search engines registered
         services.TryAddScoped<ISearchEngineScraperStrategy, SearchEngineScraperStrategy>();
 
-        // Change URI to IOptions?
-        var googleUri = new Uri("https://www.google.com");
-        services.AddHttpClient<GoogleClient>(client => client.BaseAddress = googleUri)
+        services.AddScoped<ISearchEngineScraperFactory, GoogleSearchEngineScraperFactory>();
+
+        // Future Improvement: Use IOptions to load this value
+        var url = new Uri("https://www.google.com");
+        services.AddHttpClient<GoogleClient>(client => client.BaseAddress = url)
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
-                var handler = new HttpClientHandler
-                {
-                    CookieContainer = new CookieContainer()
-                };
+                var handler = new HttpClientHandler();
 
                 // These cookies allow us to bypass the 'accept cookies before continue' screen Google now shows
-                handler.CookieContainer.Add(googleUri, new Cookie("CONSENT", "PENDING+987"));
-                handler.CookieContainer.Add(googleUri, 
+                handler.CookieContainer.Add(url, new Cookie("CONSENT", "PENDING+987"));
+                handler.CookieContainer.Add(url, 
                     new Cookie("SOCS", "CAESHAgBEhJnd3NfMjAyMzA4MTAtMF9SQzIaAmRlIAEaBgiAo_CmBg"));
 
                 return handler;
             });
-
-        services.AddScoped<ISearchEngineScraperFactory, GoogleSearchEngineScraperFactory>();
 
         return services;
     }
