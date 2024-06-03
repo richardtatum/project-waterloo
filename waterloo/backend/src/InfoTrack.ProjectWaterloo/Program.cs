@@ -1,6 +1,8 @@
 using InfoTrack.ProjectWaterloo.Models;
 using InfoTrack.ProjectWaterloo.Scraping.Extensions;
 using InfoTrack.ProjectWaterloo.Scraping.Interfaces;
+using InfoTrack.ProjectWaterloo.Scraping.Scrapers;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,27 +23,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
-
-app.MapGet("/ranking", async (IRankingScraper scraper, string searchTerm, string matchingDomain, int results = 100) =>
+app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, string searchTerm, [FromQuery] SearchEngine searchEngine, string matchingDomain, int results = 100) =>
 {
     // Do more validation
     if (string.IsNullOrWhiteSpace(searchTerm) || string.IsNullOrWhiteSpace(matchingDomain))
@@ -49,14 +31,21 @@ app.MapGet("/ranking", async (IRankingScraper scraper, string searchTerm, string
         return Results.BadRequest();
     }
 
+    var scraperType = searchEngine switch
+    {
+        SearchEngine.Google => typeof(GoogleSearchEngineScraper),
+        _ => null
+    };
+
+    if (scraperType is null)
+    {
+        return Results.BadRequest("Search engine is not registered.");
+    }
+
+    var scraper = scraperStrategy.Create(scraperType);
     var positions = await scraper.GetResultPositionsAsync(searchTerm, matchingDomain, results);
 
     return Results.Ok(positions);
 });
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

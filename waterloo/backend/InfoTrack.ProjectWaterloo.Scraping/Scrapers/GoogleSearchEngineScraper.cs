@@ -2,23 +2,15 @@ using System.Text.RegularExpressions;
 using InfoTrack.ProjectWaterloo.Scraping.Clients;
 using InfoTrack.ProjectWaterloo.Scraping.Interfaces;
 using InfoTrack.ProjectWaterloo.Scraping.Models;
-using Microsoft.Extensions.Logging;
 
 namespace InfoTrack.ProjectWaterloo.Scraping.Scrapers;
 
-public class GoogleRankingScraper : IRankingScraper
+// TODO: Does this become results position scraper instead? Otherwise regex pattern is specific to the function
+public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScraper
 {
-    private readonly ILogger<GoogleRankingScraper> _logger;
-    private readonly GoogleClient _client;
-    // For Google, we extract the q parameter of the first a href within the first div as these represent each search result
     // TODO: Load this via IOptions
+    // For Google, we extract the q parameter of the first a href within the first div as these represent each search result
     private readonly string _regexPattern = @"<div class=""[^""]+""><a href=""/url\?q=([^""]+)""";
-
-    public GoogleRankingScraper(ILogger<GoogleRankingScraper> logger, GoogleClient client)
-    {
-        _logger = logger;
-        _client = client;
-    }
 
     public async Task<SearchRanking[]> GetResultPositionsAsync(string searchTerm, string matchingDomain, int results = 100)
     {
@@ -27,8 +19,7 @@ public class GoogleRankingScraper : IRankingScraper
             return [];
         }
         
-        // Check lowercase?
-        if (!matchingDomain.StartsWith("http://") || !matchingDomain.StartsWith("https://"))
+        if (!matchingDomain.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || !matchingDomain.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
         {
             matchingDomain = "https://" + matchingDomain;
         }
@@ -39,13 +30,13 @@ public class GoogleRankingScraper : IRankingScraper
             return [];
         }
 
-        var rawHtml = await _client.SearchAsync(searchTerm, results);
+        var rawHtml = await client.SearchAsync(searchTerm, results);
         return ExtractResultPositions(rawHtml, domainUri);
     }
 
     private SearchRanking[] ExtractResultPositions(string rawHtml, Uri matchingDomain)
     {
-        // Pass the regexPattern as a argument for easier testing? 
+        // Pass the regexPattern as an argument for easier testing? 
         var matches = Regex.Matches(rawHtml, _regexPattern);
         if (matches.Count == 0)
         {
@@ -54,7 +45,6 @@ public class GoogleRankingScraper : IRankingScraper
                 "Unable to match any patterns for this search engine. Potential scraping issue.");
         }
 
-        // Convert to model?
         return matches.Select((match, index) =>
             {
                 // Groups[1] is the value captured by the parenthesis in the regex pattern (i.e. the domain url)
@@ -70,9 +60,10 @@ public class GoogleRankingScraper : IRankingScraper
 
                 // TODO: WARN ABOUT SUBDOMAINS NOT MATCHING
                 return domain.Host.Equals(matchingDomain.Host, StringComparison.OrdinalIgnoreCase)
-                    ? new SearchRanking(domain.AbsoluteUri, index)
+                    ? new SearchRanking(domain.AbsoluteUri, index + 1)
                     : null;
-            }).Where(ranking => ranking != null)
+            })
+            .Where(ranking => ranking != null)
             .ToArray()!; // TODO: Is this suppressor a bad idea?
     }
 }
