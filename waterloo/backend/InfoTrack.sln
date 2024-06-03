@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoTrack.ProjectWaterloo", "src\InfoTrack.ProjectWaterloo\InfoTrack.ProjectWaterloo.csproj", "{06CE55C3-46C1-4C3D-A7CD-E5D1A672B3D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoTrack.ProjectWaterloo.Scraping", "InfoTrack.ProjectWaterloo.Scraping\InfoTrack.ProjectWaterloo.Scraping.csproj", "{62DA31C7-F24A-42AF-A272-1C9CE3135720}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoTrack.ProjectWaterloo.Scraping", "src\InfoTrack.ProjectWaterloo.Scraping\InfoTrack.ProjectWaterloo.Scraping.csproj", "{62DA31C7-F24A-42AF-A272-1C9CE3135720}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

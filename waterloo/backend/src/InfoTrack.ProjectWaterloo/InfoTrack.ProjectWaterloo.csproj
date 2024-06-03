@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\InfoTrack.ProjectWaterloo.Scraping\InfoTrack.ProjectWaterloo.Scraping.csproj" />
+      <ProjectReference Include="..\InfoTrack.ProjectWaterloo.Scraping\InfoTrack.ProjectWaterloo.Scraping.csproj" />
     </ItemGroup>
 
 </Project>
