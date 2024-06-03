@@ -52,7 +52,7 @@ app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, stri
     catch (InvalidOperationException ex)
     {
         return Results.UnprocessableEntity(
-            new RankingResponse("Failed to scrape requested search engine. Please contact an administrator."));
+            new RankingResponse(ex.Message));
     }
     catch (ArgumentOutOfRangeException ex)
     {
