@@ -1,10 +1,10 @@
 using InfoTrack.ProjectWaterloo.Scraping.Extensions;
 
-namespace InfoTrack.ProjectWaterloo.Scraping.Clients;
+namespace InfoTrack.ProjectWaterloo.Scraping.Google;
 
 public class GoogleClient(HttpClient httpClient)
 {
-    public async Task<string> SearchAsync(string searchTerm, int results = 100)
+    internal async Task<string> SearchAsync(string searchTerm, int results = 100)
     {
         var url = "search"
             .AddQueryParameter("num", results)

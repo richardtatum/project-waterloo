@@ -1,12 +1,10 @@
 using System.Net;
-using InfoTrack.ProjectWaterloo.Scraping.Clients;
-using InfoTrack.ProjectWaterloo.Scraping.Factories;
 using InfoTrack.ProjectWaterloo.Scraping.Interfaces;
 using InfoTrack.ProjectWaterloo.Scraping.Strategies;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace InfoTrack.ProjectWaterloo.Scraping.Extensions;
+namespace InfoTrack.ProjectWaterloo.Scraping.Google;
 
 public static class ServiceCollectionExtensions
 {

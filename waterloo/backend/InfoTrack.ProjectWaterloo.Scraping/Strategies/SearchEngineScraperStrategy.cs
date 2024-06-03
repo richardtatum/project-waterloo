@@ -7,7 +7,7 @@ public class SearchEngineScraperStrategy(IEnumerable<ISearchEngineScraperFactory
 {
     public ISearchEngineScraper Create(Type type)
     {
-        var factory = searchEngineScraperFactories.FirstOrDefault(scraper => scraper.IsInstanceOf(type));
+        var factory = searchEngineScraperFactories.FirstOrDefault(scraper => scraper.IsTypeOf(type));
         if (factory is null)
         {
             throw new ArgumentOutOfRangeException(nameof(type), $"Factory of type {type} is not registered.");
