@@ -20,11 +20,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, string searchTerm, [FromQuery] SearchEngine searchEngine, string matchingDomain, int results = 100) =>
+app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, string? searchTerm, [FromQuery] SearchEngine? searchEngine, string? matchingDomain, int results = 100) =>
 {
     if (string.IsNullOrWhiteSpace(searchTerm) || string.IsNullOrWhiteSpace(matchingDomain) || results <= 0)
     {
-        return Results.BadRequest();
+        return Results.BadRequest(new RankingResponse("One or more parameters are missing, empty or invalid."));
     }
 
     var scraperType = searchEngine switch
@@ -35,7 +35,7 @@ app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, stri
 
     if (scraperType is null)
     {
-        return Results.BadRequest("Search engine is not registered.");
+        return Results.BadRequest(new RankingResponse("Search Engine is not registered for scraping."));
     }
 
     try
