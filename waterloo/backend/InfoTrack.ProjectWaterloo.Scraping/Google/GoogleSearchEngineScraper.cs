@@ -77,6 +77,13 @@ public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScrap
             return false;
         }
 
+        // Return false if there is no TLD
+        var hostParts = uri.Host.Split('.');
+        if (hostParts.Length < 2 || string.IsNullOrWhiteSpace(hostParts.Last()))
+        {
+            return false;
+        }
+
         validUrl = uri;
         return true;
     }
