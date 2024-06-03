@@ -25,7 +25,7 @@ public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScrap
         // Move this to a function, make tests for it
         if (!IsValidUrl(matchingDomain, out var matchingUri) || matchingUri is null)
         {
-            return [];
+            throw new InvalidOperationException("Invalid URL provided.");
         }
 
         var rawHtml = await client.SearchAsync(searchTerm, results);
@@ -39,7 +39,7 @@ public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScrap
         if (matches.Count == 0)
         {
             throw new InvalidOperationException(
-                "Unable to match any patterns for this search engine. Potential scraping issue.");
+                "Unable to match any patterns for this search engine. Something may be blocking the scraping.");
         }
 
         return matches.Select((match, index) =>
