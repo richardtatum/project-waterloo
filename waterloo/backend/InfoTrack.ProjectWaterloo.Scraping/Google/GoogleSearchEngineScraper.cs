@@ -16,7 +16,7 @@ public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScrap
         searchTerm = searchTerm.ToLower();
         matchingDomain = matchingDomain.ToLower();
         
-        if (!matchingDomain.StartsWith("http://") || !matchingDomain.StartsWith("https://"))
+        if (!matchingDomain.StartsWith("http://") && !matchingDomain.StartsWith("https://"))
         {
             matchingDomain = "https://" + matchingDomain;
         }
