@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Web;
 using InfoTrack.ProjectWaterloo.Scraping.Interfaces;
 using InfoTrack.ProjectWaterloo.Scraping.Models;
 
@@ -62,17 +63,21 @@ public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScrap
     private static bool IsValidUrl(string url, out Uri? validUrl)
     {
         validUrl = null;
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var validUri))
+
+        // Strip any google AMP additions
+        url = url.Split("&amp;")[0];
+        
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {
             return false;
         }
 
-        if (validUri.Scheme != Uri.UriSchemeHttp && validUri.Scheme != Uri.UriSchemeHttps)
+        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
         {
             return false;
         }
 
-        validUrl = validUri;
+        validUrl = uri;
         return true;
     }
 }
