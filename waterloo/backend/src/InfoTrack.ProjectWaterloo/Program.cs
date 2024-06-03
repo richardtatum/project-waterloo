@@ -1,13 +1,10 @@
 using InfoTrack.ProjectWaterloo.Models;
-using InfoTrack.ProjectWaterloo.Scraping.Extensions;
+using InfoTrack.ProjectWaterloo.Scraping.Google;
 using InfoTrack.ProjectWaterloo.Scraping.Interfaces;
-using InfoTrack.ProjectWaterloo.Scraping.Scrapers;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddGoogle();
@@ -25,8 +22,7 @@ app.UseHttpsRedirection();
 
 app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, string searchTerm, [FromQuery] SearchEngine searchEngine, string matchingDomain, int results = 100) =>
 {
-    // Do more validation
-    if (string.IsNullOrWhiteSpace(searchTerm) || string.IsNullOrWhiteSpace(matchingDomain))
+    if (string.IsNullOrWhiteSpace(searchTerm) || string.IsNullOrWhiteSpace(matchingDomain) || results <= 0)
     {
         return Results.BadRequest();
     }
@@ -42,10 +38,24 @@ app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, stri
         return Results.BadRequest("Search engine is not registered.");
     }
 
-    var scraper = scraperStrategy.Create(scraperType);
-    var positions = await scraper.GetResultPositionsAsync(searchTerm, matchingDomain, results);
+    try
+    {
+        var scraper = scraperStrategy.Create(scraperType);
+        var positions = await scraper.GetResultPositionsAsync(searchTerm, matchingDomain, results);
+        return Results.Ok(new RankingResponse(positions));
+    }
+    catch (InvalidOperationException ex)
+    {
+        return Results.UnprocessableEntity(
+            new RankingResponse("Failed to scrape requested search engine. Please contact an administrator."));
+    }
+    catch (ArgumentOutOfRangeException ex)
+    {
+        return Results.UnprocessableEntity(
+            new RankingResponse(
+                "Failed to create scraper for requested search engine. Please contact an administrator."));
+    }
 
-    return Results.Ok(positions);
 });
 
 app.Run();
