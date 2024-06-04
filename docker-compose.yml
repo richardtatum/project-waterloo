@@ -2,8 +2,6 @@ services:
   backend:
     image: infotrack/project-waterloo-backend
     container_name: backend
-    ports:
-      - "8080:8080"
     build:
       context: waterloo/backend
       dockerfile: Dockerfile
