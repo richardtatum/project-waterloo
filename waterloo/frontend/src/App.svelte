@@ -109,7 +109,13 @@
     <header></header>
     <main class="container">
         <article>
-            <header>Search</header>
+            <header>
+                Search
+                <small>
+                    - Provides the frequency and positions a site appears in the
+                    results of a given search</small
+                >
+            </header>
             <form>
                 <label>
                     Search Term
