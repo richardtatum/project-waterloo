@@ -19,4 +19,4 @@ services:
       context: waterloo/frontend
       dockerfile: Dockerfile
     environment:
-      - API_URL=backendd:8080
+      - API_URL=backend:8080
