@@ -1,6 +1,0 @@
-@InfoTrack.ProjectWaterloo_HostAddress = http://localhost:5267
-
-GET {{InfoTrack.ProjectWaterloo_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
