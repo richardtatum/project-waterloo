@@ -14,5 +14,4 @@ COPY --from=build /app/dist .
 COPY Caddyfile /etc/caddy/Caddyfile
 RUN caddy fmt /etc/caddy/Caddyfile --overwrite
 
-EXPOSE 4273
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
