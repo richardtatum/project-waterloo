@@ -19,7 +19,6 @@
     };
 
     let searchHistory: SearchHistory[] = [];
-
     let error = "";
     let searchTerm = "";
     let domain = "";
@@ -41,9 +40,19 @@
 
         searching = true;
         results = await fetch(
-            `http://localhost:5267/ranking?searchTerm=${searchTerm}&matchingDomain=${domain}&searchEngine=${searchEngine}&results=${maxSearchCount}`
+            `/api/ranking?searchTerm=${searchTerm}&matchingDomain=${domain}&searchEngine=${searchEngine}&results=${maxSearchCount}`
         )
-            .then(response => response.json())
+            .then(response => {
+                if (
+                    response.ok ||
+                    response.status === 400 ||
+                    response.status === 422
+                ) {
+                    return response.json();
+                }
+
+                throw Error(`Request failed. Status: ${response.status}`);
+            })
             .catch(err => {
                 error = err;
             });
@@ -106,7 +115,6 @@
 </script>
 
 <body>
-    <header></header>
     <main class="container">
         <article>
             <header>
