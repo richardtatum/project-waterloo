@@ -8,6 +8,6 @@
     file_server
 
     handle /api/* {
-        reverse_proxy ${API_URL}
+        reverse_proxy {$API_URL}
     }
 }
