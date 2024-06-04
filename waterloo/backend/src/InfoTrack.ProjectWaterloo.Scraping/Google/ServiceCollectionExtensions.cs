@@ -13,11 +13,11 @@ public static class ServiceCollectionExtensions
         // This may already be registered if there are multiple search engines registered
         services.TryAddScoped<ISearchEngineScraperStrategy, SearchEngineScraperStrategy>();
 
-        services.AddScoped<ISearchEngineScraperFactory, GoogleSearchEngineScraperFactory>();
+        services.AddScoped<ISearchEngineScraperFactory, SearchEngineScraperFactory>();
 
         // Future Improvement: Use IOptions to load this value
         var url = new Uri("https://www.google.com");
-        services.AddHttpClient<GoogleClient>(client => client.BaseAddress = url)
+        services.AddHttpClient<Client>(client => client.BaseAddress = url)
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var handler = new HttpClientHandler();

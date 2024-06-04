@@ -5,7 +5,7 @@ using InfoTrack.ProjectWaterloo.Scraping.Models;
 
 namespace InfoTrack.ProjectWaterloo.Scraping.Google;
 
-public class GoogleSearchEngineScraper(GoogleClient client) : ISearchEngineScraper
+public class SearchEngineScraper(Client client) : ISearchEngineScraper
 {
     // Future Improvement: Load this via IOptions
     // For Google, we extract the q parameter of the first a href within the first div as these (currently) represent each result

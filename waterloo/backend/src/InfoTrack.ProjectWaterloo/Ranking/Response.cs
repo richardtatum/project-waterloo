@@ -3,15 +3,15 @@ using InfoTrack.ProjectWaterloo.Scraping.Models;
 
 namespace InfoTrack.ProjectWaterloo.Ranking;
 
-public class RankingResponse : ApiResponse
+public class Response : BaseResponse
 {
-    public RankingResponse(string error)
+    public Response(string error)
     {
         Success = false;
         Errors = [error];
     }
 
-    public RankingResponse(SearchRanking[] rankings)
+    public Response(SearchRanking[] rankings)
     {
         Rankings = rankings;
     }

@@ -2,7 +2,7 @@ using InfoTrack.ProjectWaterloo.Scraping.Extensions;
 
 namespace InfoTrack.ProjectWaterloo.Scraping.Google;
 
-public class GoogleClient(HttpClient httpClient)
+public class Client(HttpClient httpClient)
 {
     internal async Task<string> SearchAsync(string searchTerm, int results = 100)
     {
