@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace InfoTrack.ProjectWaterloo.Models;
+namespace InfoTrack.ProjectWaterloo.Ranking;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SearchEngine

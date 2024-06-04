@@ -1,6 +1,7 @@
+using InfoTrack.ProjectWaterloo.Models;
 using InfoTrack.ProjectWaterloo.Scraping.Models;
 
-namespace InfoTrack.ProjectWaterloo.Models;
+namespace InfoTrack.ProjectWaterloo.Ranking;
 
 public class RankingResponse : ApiResponse
 {
