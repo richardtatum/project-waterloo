@@ -27,7 +27,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors();
 
-app.MapGet("/ranking", async (ISearchEngineScraperStrategy scraperStrategy, string? searchTerm, [FromQuery] SearchEngine? searchEngine, string? matchingDomain, int results = 100) =>
+app.MapGet("api/ranking", async (ISearchEngineScraperStrategy scraperStrategy, string? searchTerm, [FromQuery] SearchEngine? searchEngine, string? matchingDomain, int results = 100) =>
 {
     if (string.IsNullOrWhiteSpace(searchTerm) || string.IsNullOrWhiteSpace(matchingDomain) || results <= 0)
     {
