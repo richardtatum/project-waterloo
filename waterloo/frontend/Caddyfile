@@ -1,0 +1,13 @@
+{
+    auto_https off
+    admin off
+}
+
+:8080 {
+    root * /usr/share/caddy
+    file_server
+
+    handle /api/* {
+        reverse_proxy ${API_URL}
+    }
+}
